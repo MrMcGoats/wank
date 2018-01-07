@@ -72,6 +72,11 @@ for i in argv:
             print(usage)
             exit(1)
             
+    elif i=="-k":
+        continue
+    elif i=="-nk":
+        keep_last_cock=False
+            
     elif i==argv[0]:
         continue
     else:
