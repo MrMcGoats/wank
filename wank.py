@@ -6,6 +6,9 @@ usage="""Usage: wank.py [options]
         --speed=<num/fast|slow>               Speed at which to jerk it, in seconds, or 'fast' or 'slow' 
         --len=<num>                           Length of the shaft. Must be at least 4
         --handed=<ambidextrous|lefty|righty>  Hand to masturbate with. Default is right.
+        --sto=<num>                           Up-strokes to orgasm
+        -k                                    Don't erase the final frame of the animation (default)
+        -nk                                   Erase the final frame of the animation
         -h, --help                            Display usage and exit."""
 
 length=4       #length of shaft
@@ -14,6 +17,8 @@ jerk_speed=0.2 #number of seconds to wait between redrawing the penis with new h
 
 two_handed=False
 lefty=False
+
+keep_last_cock=True
 
 for i in argv:
     if i=="--help" or i=="-h":
@@ -27,7 +32,7 @@ for i in argv:
             jerk_speed=0.4
         else:
             try:
-                jerk_speed=int(i[8:])
+                jerk_speed=float(i[8:])
             except ValueError:
                 print(usage)
                 exit(1)
@@ -60,6 +65,13 @@ for i in argv:
             print(usage)
             exit(1)
             
+    elif i[:6]=="--sto=":
+        try:
+            cum_speed=int(i[6:])
+        except ValueError:
+            print(usage)
+            exit(1)
+            
     elif i==argv[0]:
         continue
     else:
@@ -68,6 +80,10 @@ for i in argv:
         
 if length<6:
     two_handed=False
+    
+#Prevent dick burn
+if jerk_speed<0.1:
+    jerk_speed=0.1
     
 #Dynamically generate animation frames based on given shaft length
 base_frame="8"
@@ -134,7 +150,10 @@ for i in range(0,cum_speed):
     for j in jerk_frames:
         print(j,end="\r")
         sleep(jerk_speed)
-    
+   
 for i in cum_frames:
     print(i,end="\r")
     sleep(0.1)
+
+if keep_last_cock:
+    print(cum_frames[len(cum_frames)-1])
