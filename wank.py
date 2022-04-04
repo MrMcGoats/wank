@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from time import sleep
 from sys import argv
 
@@ -9,11 +11,13 @@ usage="""Usage: wank.py [options]
         --sto=<num>                           Up-strokes to orgasm
         -k                                    Don't erase the final frame of the animation (default)
         -nk                                   Erase the final frame of the animation
+        --velocity=<num>                      The number of spaces between the cock and the ejaculate
         -h, --help                            Display usage and exit."""
 
 length=4       #length of shaft
 cum_speed=5    #number of strokes to acheive orgasm
 jerk_speed=0.2 #number of seconds to wait between redrawing the penis with new hand placement
+cum_distance=1 #Number of spaces between cock and cum shot
 
 two_handed=False
 lefty=False
@@ -76,6 +80,13 @@ for i in argv:
         continue
     elif i=="-nk":
         keep_last_cock=False
+    
+    elif i[:11]=="--velocity=":
+        try:
+            cum_distance=int(i[9:])
+        except ValueError:
+            print(usage)
+            exit(1)
             
     elif i==argv[0]:
         continue
@@ -139,8 +150,9 @@ for i in range(length,start_val,-1):
     
 if two_handed:
     length+=1
-    
-cum_frames=[jerk_frames[len(jerk_frames)-1]+"-",
+
+#cum_frames = [jerk_frames[len(jerk_frames-1)]+(" "*cum_distance)]
+cum_frames = ["-",
         jerk_frames[0]+"--",
         get_next_frame(jerk_frames,0)+"--_",
         get_next_frame(jerk_frames,1)+" ___"]
@@ -151,14 +163,22 @@ for i in range(2,length*4):
 if length>=20:
     cum_speed=2
 
-for i in range(0,cum_speed):
-    for j in jerk_frames:
-        print(j,end="\r")
-        sleep(jerk_speed)
-   
-for i in cum_frames:
-    print(i,end="\r")
-    sleep(0.1)
+try:
+    for i in range(0,cum_speed):
+        for j in jerk_frames:
+            print(j,end="\r")
+            sleep(jerk_speed)
+except KeyboardInterrupt:
+    print("\rOh, you fucking tease!")
+    exit(0)
+  
+try:
+    for i in cum_frames:
+        print(i,end="\r")
+        sleep(0.1)
 
-if keep_last_cock:
-    print(cum_frames[len(cum_frames)-1])
+    if keep_last_cock:
+        print(cum_frames[len(cum_frames)-1])
+except KeyboardInterrupt:
+    print()
+    exit(0)
