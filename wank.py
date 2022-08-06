@@ -2,6 +2,7 @@
 
 from time import sleep
 from sys import argv
+import random
 
 usage="""Usage: wank.py [options]
 
@@ -83,7 +84,7 @@ for i in argv:
     
     elif i[:11]=="--velocity=":
         try:
-            cum_distance=int(i[9:])
+            cum_distance=int(i[11:])
         except ValueError:
             print(usage)
             exit(1)
@@ -153,9 +154,22 @@ if two_handed:
 
 #cum_frames = [jerk_frames[len(jerk_frames-1)]+(" "*cum_distance)]
 cum_frames = ["-",
-        jerk_frames[0]+"--",
-        get_next_frame(jerk_frames,0)+"--_",
-        get_next_frame(jerk_frames,1)+" ___"]
+        jerk_frames[0]+"--"]
+
+cum_seperator = " "
+
+if cum_distance > 1:
+    distance_since_last_stain = 0
+    for i in range(1, cum_distance + 1):
+        seperator = " "
+        if distance_since_last_stain % random.randint(1,100) == 0:
+            seperator = "."
+        distance_since_last_stain += 1
+        cum_frames.append(get_next_frame(jerk_frames, i) + cum_seperator + seperator + "---")
+        cum_seperator += seperator
+
+cum_frames.append(get_next_frame(jerk_frames, cum_distance + 1) + cum_seperator + "--_")
+cum_frames.append(get_next_frame(jerk_frames, cum_distance + 1) + cum_seperator + "___")
 
 for i in range(2,length*4):
     cum_frames.append(get_next_frame(jerk_frames,i))
